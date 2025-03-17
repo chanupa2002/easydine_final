@@ -56,6 +56,24 @@ router.get("/:id", (req, res) => {
         });
 });
 
+router.get("/check/:empId/:prevMonth", (req, res) => {
+    const { empId, prevMonth } = req.params;
+  
+    Salary.findOne({ empId, month: prevMonth })
+        .then(salaryRecord => {
+            if (salaryRecord) {
+                return res.status(200).json({ paid: true });
+            } else {
+                return res.status(400).json({ paid: false, message: "Previous month's salary is unpaid." });
+            }
+        })
+        .catch(err => {
+            console.error('Error checking salary:', err);
+            return res.status(500).json({ message: 'Server error' });
+        });
+});
+
+
 
 router.put("/update/:id", (req, res) => {
     try {
